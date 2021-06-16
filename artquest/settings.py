@@ -30,6 +30,10 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
+THIRD_PARTY_APPS = [
+    "polymorphic",
+]
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -42,7 +46,7 @@ INSTALLED_APPS = [
     "people",
     "works",
     "ingestions",
-]
+] + THIRD_PARTY_APPS
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
