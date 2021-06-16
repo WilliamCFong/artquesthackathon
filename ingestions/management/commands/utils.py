@@ -1,5 +1,6 @@
 from people.models import Artist
 
+
 def get_artist_by_maker(maker_string):
     names = maker_string.split(",")
     try:
@@ -26,3 +27,11 @@ def get_artist_by_maker(maker_string):
             **params
         )
     )
+
+
+def get_pac(pac_string):
+    _, pac, *subpac = pac_string.split(".")
+    return {
+        "pac": int(pac),
+        "subpac": int(subpac[0]) if subpac else 0
+    }

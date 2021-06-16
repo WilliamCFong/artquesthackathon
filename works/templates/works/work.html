@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Work {{ work }}</h2>
+<h5>{{ work.artists.first }}</h5>
+<small><a href="/works/">Back</a></small>
+<ul>
+    {% for iteration in work.iterations.all %}
+    <li>{{ iteration }}</li>
+    {% endfor %}
+{% endblock %}
