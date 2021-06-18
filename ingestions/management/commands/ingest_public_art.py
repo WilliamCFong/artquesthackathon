@@ -1,5 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
+from django.db import transaction
 from .import_base import ImportUrl
+from .utils import get_artist_by_maker, get_pac
 from city_resource.models import CityDataSource
 import pandas as pd
 
@@ -12,34 +14,25 @@ class Command(ImportUrl):
     base_url = "http://data.cabq.gov/community/art/publicartv2/CABQPublicArt.csv"
 
 
-    def get_artists(self, df):
-        new_artists = {}
-        artists = df["Maker"]
-
-    def get_art(self, df):
-        pass
-
-    def get_events(self, df):
-        pass
-
-    def get_locations(self, df):
-        pass
-
     def handle(self, *args, **kwargs):
         url = kwargs.pop("url_override", base_url)
-        models_to_add = []  # Must be saved in-order to satisfy fk constraints
         # Assume csv
         df = pd.read_csv(url)
 
-        public_art, created = CityDataSource.objects.get_or_create(name=CABQ_PUBLIC_DATANAME)
-        if created:
-            self.stdout.write(
-                f"Enqueing {public_art} for creation"
-            )
-            models_to_add.append(public_art)
+        with transaction.atomic()
+            public_art, created = CityDataSource.objects.get_or_create(name=CABQ_PUBLIC_DATANAME)
+            if created:
+                self.stdout.write(
+                    f"Adding {public_art}"
+                )
+                public_art.save()
 
-        # Grab Artists
-        raise NotImplementedError
+            for idx, row in df.iterrows():
+                pac_info = get_pac(row["Object Number"])
+                art, created = Art.objects.get_or_create(pac=pac_info["pac"], data_source=public_art)
+                if created:
+                    f"Creating {art}"
+                    art.title = row["Title"]
+                    art.save()
 
-        # Define Works
-        raise NotImplementedError
+
