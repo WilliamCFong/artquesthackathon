@@ -5,3 +5,7 @@ pandas
 numpy
 folium
 django-polymorphic
+django-money
+djangorestframework
+markdown
+django-filter
