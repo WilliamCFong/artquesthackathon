@@ -1,6 +1,9 @@
+from polymorphic.models import PolymorphicModel
+from djmoney.models.fields import MoneyField
 from django.contrib.gis.db import models
 from people.models import Artist, Organization
-from locations.models import Location
+from spacetime.models import TimeSeries
+from django.contrib.postgres.indexes import BrinIndex
 
 
 class Category(models.Model):
@@ -10,12 +13,23 @@ class Category(models.Model):
         verbose_name_plural = "categories"
 
 
-class Status(models.Model):
-    name = models.CharField(max_length=128, unique=True)
+class Event(TimeSeries):
+    pass
+
+
+class Valuation(Event):
+    valuation_type = models.CharField(max_length=128)
+    amount = MoneyField()
+
+    class Meta:
+        indexes = [
+            BrinIndex(name="money_idx", fields=["amount"]),
+        ]
 
 
 class Work(models.Model):
     pac = models.IntegerField(primary_key=True)
+    title = models.CharField(max_length=128)
 
     # Begin relational models
     categories = models.ManyToManyField(Category)
@@ -45,7 +59,6 @@ class Iteration(models.Model):
     iteration_date = models.DateField(null=True)
     location = models.PointField(null=True)
     name = models.CharField(max_length=128, blank=True, null=True)
-    zipcode = models.CharField(max_length=128, null=True, blank=True)
     title = models.CharField(max_length=128, null=True, blank=True)
 
 
