@@ -19,7 +19,7 @@ class Event(TimeSeries):
 
 class Valuation(Event):
     valuation_type = models.CharField(max_length=128)
-    amount = MoneyField()
+    amount = MoneyField(default_currency="USD")
 
     class Meta:
         indexes = [
