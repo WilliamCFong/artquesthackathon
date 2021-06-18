@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class Artist(models.Model):
+class Individual(models.Model):
     first_name = models.CharField(max_length=128, )
     middle_name = models.CharField(max_length=128, )
     last_name = models.CharField(max_length=128, )

@@ -2,6 +2,7 @@ from polymorphic.models import PolymorphicModel
 from django.contrib.gis.db import models
 from django.contrib.postgres.indexes import BrinIndex, GistIndex
 
+
 class TimeSeries(PolymorphicModel):
     timestamp = models.DateTime(null=False)
 

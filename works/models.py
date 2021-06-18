@@ -1,9 +1,10 @@
 from polymorphic.models import PolymorphicModel
 from djmoney.models.fields import MoneyField
 from django.contrib.gis.db import models
-from people.models import Artist, Organization
+from people.models import Individual, Organization
 from spacetime.models import TimeSeries
 from django.contrib.postgres.indexes import BrinIndex
+from city_resource.models import CityData
 
 
 class Category(models.Model):
@@ -13,8 +14,24 @@ class Category(models.Model):
         verbose_name_plural = "categories"
 
 
+class Art(CityData):
+    pac = models.IntegerField(unique=True)
+    title = models.CharField(max_length=128)
+
+    # Begin relational models
+    artists = models.ManyToManyField(Individual)
+    categories = models.ManyToManyField(Category)
+    organizations = models.ManyToManyField(Organization)
+
+    def __str__(self):
+        return f"PAC {self.pac}"
+
+    def get_absolute_url(self):
+        return f"/works/{self.pac}/"
+
+
 class Event(TimeSeries):
-    pass
+    art = models.ForeignKey(Art)
 
 
 class Valuation(Event):
@@ -27,40 +44,6 @@ class Valuation(Event):
         ]
 
 
-class Work(models.Model):
-    pac = models.IntegerField(primary_key=True)
-    title = models.CharField(max_length=128)
-
-    # Begin relational models
-    categories = models.ManyToManyField(Category)
-    artists = models.ManyToManyField(Artist)
-    organizations = models.ManyToManyField(Organization)
-
-    def __str__(self):
-        return f"PAC {self.pac}"
-
-    def get_absolute_url(self):
-        return f"/works/{self.pac}/"
-
-    def most_recent_loc(self):
-        iteration = (
-            self
-            .iterations
-            .filter(location__isnull=False)
-            .order_by("-iteration_date")
-            .first()
-        )
-        return iteration.location
-
-
-class Iteration(models.Model):
-    work = models.ForeignKey(Work, on_delete=models.CASCADE, related_name="iterations")
-    iter_n = models.IntegerField()
-    iteration_date = models.DateField(null=True)
-    location = models.PointField(null=True)
-    name = models.CharField(max_length=128, blank=True, null=True)
-    title = models.CharField(max_length=128, null=True, blank=True)
-
-
-    def __str__(self):
-        return f"{self.title}"
+class Work(Event):
+    work_type = models.CharField(max_length=128)
+    contributers = models.ManyToManyField(Individual)
