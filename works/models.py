@@ -43,7 +43,7 @@ class Location(SpaceTimePoint):
 
 class EventType(SlugNameMixin):
     def __str__(self):
-        return "EventType {self.name}"
+        return f"EventType {self.name}"
 
 
 class Event(TimeSeries):
@@ -60,3 +60,6 @@ class Valuation(Event):
         indexes = [
             BrinIndex(name="money_idx", fields=["amount"]),
         ]
+
+    def __str__(self):
+        return f"{self.timestamp}: {self.amount}"

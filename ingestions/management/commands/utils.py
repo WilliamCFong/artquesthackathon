@@ -1,5 +1,13 @@
 from people.models import Individual
+from dateutil import parser, tz
+from datetime import tzinfo
+import pytz
 
+
+def get_timestamp(timestring, tzname="America/Denver"):
+    #zone = tz.tzoffset("MDT", -21600)
+    stamp = parser.parse(timestring)
+    return stamp
 
 def get_individual_by_maker(maker_string):
     names = maker_string.split(",")
@@ -45,14 +53,14 @@ common_misspellings = {
 
 
 def normalize_event_type(event_type_string):
-    tokens = tuple(map(str.strip, even_type_string.split()))
+    tokens = tuple(map(str.strip, event_type_string.split()))
     normalized = []
     for token in tokens:
         # Correct for spelling
         corrected = common_misspellings.get(token.lower(), token.lower())
 
         # Capitalize each token
-        corrected[0] = corrected[0].upper()
+        corrected = corrected[0].upper() + corrected[1:]
         normalized.append(corrected)
 
     return " ".join(normalized)
