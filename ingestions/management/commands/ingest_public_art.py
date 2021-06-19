@@ -60,6 +60,18 @@ class Command(ImportUrl):
             art.description = row["Description"]
             art.save()
 
+    def handle_category(self, current_art, row):
+        name = row["Classification"]
+        category, created = (
+            Category
+            .objects
+            .get_or_create(
+                name=name
+            )
+        )
+        if created:
+            category.save()
+
     def handle_event_type(self, current_art, row):
         name = normalize_event_type(row["Event Type"])
 

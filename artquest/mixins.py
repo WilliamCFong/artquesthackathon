@@ -2,9 +2,12 @@ from django.db import models
 from django.utils.text import slugify
 
 
-class SlugNameMixin:
+class SlugNameMixin(models.Model):
     name = models.CharField(max_length=64, unique=True)
     slug = models.SlugField(max_length=64, unique=True)
+
+    class Meta:
+        abstract = True
 
     def save(self, *args, **kwargs):
         if not self.slug:

@@ -4,9 +4,9 @@ from django.utils.text import slugify
 from artquest.mixins import SlugNameMixin
 
 
-class CityDataSource(models.Model, SlugNameMixin):
+class CityDataSource(SlugNameMixin):
     city_url = models.URLField()
 
 
 class CityData(PolymorphicModel, SlugNameMixin):
-    data_source = models.ForeignKey(CityDataSource)
+    data_source = models.ForeignKey(CityDataSource, on_delete=models.RESTRICT)

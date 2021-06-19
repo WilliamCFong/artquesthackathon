@@ -2,7 +2,7 @@ from polymorphic.models import PolymorphicModel
 from djmoney.models.fields import MoneyField
 from django.contrib.gis.db import models
 from people.models import Individual, Organization
-from spacetime.models import TimeSeries, SpatialPoint
+from spacetime.models import TimeSeries, SpaceTimePoint
 from artquest.mixins import SlugNameMixin
 from django.contrib.postgres.indexes import BrinIndex
 from city_resource.models import CityData
@@ -32,10 +32,10 @@ class Art(CityData):
     def get_absolute_url(self):
         return f"/works/{self.pac}/"
 
-class Location(TimeSeries, SpatialPoint):
-    art = models.ForeignKey(Art)
-    location = models.CharField(length=256, null=True, blank=True)
-    site = models.CharField(length=256, null=True, blank=True)
+class Location(SpaceTimePoint):
+    art = models.ForeignKey(Art, on_delete=models.CASCADE)
+    spatial = models.CharField(max_length=256, null=True, blank=True)
+    site = models.CharField(max_length=256, null=True, blank=True)
 
     def __str__(self):
         return f"{self.point} on {self.timestamp}"
@@ -45,15 +45,16 @@ class EventType(SlugNameMixin):
     def __str__(self):
         return "EventType {self.name}"
 
+
 class Event(TimeSeries):
-    event_type = models.ForeignKey(EventType)
-    art = models.ForeignKey(Art)
+    event_type = models.ForeignKey(EventType, on_delete=models.RESTRICT)
+    art = models.ForeignKey(Art, on_delete=models.CASCADE)
 
     contributers = models.ManyToManyField(Individual)
 
 
 class Valuation(Event):
-    amount = MoneyField(default_currency="USD")
+    amount = MoneyField(max_digits=19, decimal_places=2, default_currency="USD")
 
     class Meta:
         indexes = [
