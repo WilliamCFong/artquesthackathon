@@ -1,13 +1,13 @@
 {% extends "base.html" %}
+{% load static %}
 {% block head %}
-{{map.header.render|safe}}
 {% endblock %}
 
 {% block content %}
-<h2>Works</h2>
-{{map.html.render|safe}}
+<h1>Locations</h1>
+<div id="app-root"></div>
+{% endblock %}
 
-<script>
-{{map.script.render|safe}}
-</script>
+{% block application_js %}
+<script type="text/javascript" src="{% static 'art.js' %}"></script>
 {% endblock %}

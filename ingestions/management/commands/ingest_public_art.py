@@ -28,11 +28,12 @@ class Command(ImportURL):
 
         with transaction.atomic():
             public_art, created = CityDataSource.objects.get_or_create(name=CABQ_PUBLIC_DATANAME)
+            public_art.city_url = url
             if created:
                 self.stdout.write(
                     f"Adding {public_art}"
                 )
-                public_art.save()
+            public_art.save()
 
             for idx, row in df.iterrows():
                 art = self.handle_art(public_art, row)

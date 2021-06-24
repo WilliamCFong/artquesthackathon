@@ -9,6 +9,6 @@ class CityDataSource(SlugNameMixin):
 
 
 class CityData(PolymorphicModel):
-    data_source = models.ForeignKey(CityDataSource, on_delete=models.RESTRICT)
+    data_source = models.ForeignKey(CityDataSource, on_delete=models.RESTRICT, related_name="data")
     class Meta:
         pass

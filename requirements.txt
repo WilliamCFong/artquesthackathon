@@ -9,3 +9,4 @@ django-money
 djangorestframework
 markdown
 django-filter
+djangorestframework-gis

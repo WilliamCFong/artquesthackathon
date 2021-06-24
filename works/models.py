@@ -32,8 +32,9 @@ class Art(CityData):
     def get_absolute_url(self):
         return f"/works/{self.pac}/"
 
+
 class Location(SpaceTimePoint):
-    art = models.ForeignKey(Art, on_delete=models.CASCADE)
+    art = models.ForeignKey(Art, on_delete=models.CASCADE, related_name="locations")
     spatial = models.CharField(max_length=256, null=True, blank=True)
     site = models.CharField(max_length=256, null=True, blank=True)
 

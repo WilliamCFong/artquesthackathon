@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 THIRD_PARTY_APPS = [
     "polymorphic",
     "rest_framework",
+    "rest_framework_gis",
     "djmoney",
 ]
 
@@ -132,8 +133,16 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
-
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATIC_URL = '/static/'
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "assets", "bundles"),
+)
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
+#STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -142,8 +151,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # Set third party settings
-REST_FRAMEWORK = {
-    "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly",
-    ],
-}
+# REST_FRAMEWORK = {
+#     "DEFAULT_PERMISSION_CLASSES": [
+#         "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly",
+#     ],
+# }
